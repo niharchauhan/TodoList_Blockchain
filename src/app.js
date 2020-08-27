@@ -62,6 +62,7 @@ App = {
         App.todoList = await App.contracts.TodoList.deployed()
     },
 
+    // Render the metamask account in the browser
     render : async() => {
         // Prevent double render
         if (App.loading) {
@@ -75,12 +76,13 @@ App = {
         $('#account').html(App.account)
 
         // Render Tasks
-        await App.renderTasks()
+        await App.renderTasks()     // after rendering account, render the tasks
   
         // Update loading state
         App.setLoading(false)
     },
 
+    // rendering tasks from blockchain
     renderTasks: async () => {
         // Load the total task count from the blockchain
         const taskCount = await App.todoList.taskCount()
@@ -100,7 +102,7 @@ App = {
             $newTaskTemplate.find('input')
                             .prop('name', taskId)
                             .prop('checked', taskCompleted)
-            //                .on('click', App.toggleCompleted)
+                            .on('click', App.toggleCompleted)
     
             // Put the task in the correct list
             if (taskCompleted) {
@@ -114,6 +116,15 @@ App = {
         }
     },    
 
+    // create a new task
+    createTask : async() => {
+        App.setLoading(true);       // set loading to true
+        const content = $('#newTask').val()     // fetch the content from textbox which has id newTask and store in content
+        await App.todoList.createTask(content)      // pass the content in createTask() which is in smart contract
+        window.location.reload()        // reload the browser to fetch all the tasks
+    },
+
+    // Loading.. effect 
     setLoading: (boolean) => {
         App.loading = boolean
         const loader = $('#loader')
@@ -130,6 +141,6 @@ App = {
 
 $(() => {
     $(window).load(() => {
-        App.load();
+        App.load()
     })
 })
