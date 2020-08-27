@@ -118,10 +118,18 @@ App = {
 
     // create a new task
     createTask : async() => {
-        App.setLoading(true);       // set loading to true
+        App.setLoading(true)       // set loading to true
         const content = $('#newTask').val()     // fetch the content from textbox which has id newTask and store in content
         await App.todoList.createTask(content)      // pass the content in createTask() which is in smart contract
         window.location.reload()        // reload the browser to fetch all the tasks
+    },
+
+    // Completed Tasks
+    toggleCompleted : async(e) => {         // since this function is an onClick event i.e checking out the checkbox, so we pass an event e
+        App.setLoading(true)
+        const taskId = e.target.name        // e contains the name of the checkbox that would be our taskId
+        await App.todoList.toggleCompleted(taskId)
+        window.location.reload()
     },
 
     // Loading.. effect 
